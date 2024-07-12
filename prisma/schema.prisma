@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:postgresstockwatchapi@localhost:5432/stock-watch-db?schema=public"
 }
 
 model Product {
