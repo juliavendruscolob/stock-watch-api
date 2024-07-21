@@ -1,9 +1,9 @@
-import { IsInt, IsString, IsUUID } from "class-validator";
+import { IsInt, IsNumber, IsNumberString, IsString, IsUUID } from "class-validator";
 
 export class ProductDto {
 
-    @IsUUID()
-    id: string;
+    // @IsUUID()
+    // id: string;
     
     @IsString()
     name: string;
@@ -11,7 +11,7 @@ export class ProductDto {
     @IsInt()
     quantity: number;
     
-    @IsInt()
+    @IsNumberString()
     price: number;
 
     history: string[];

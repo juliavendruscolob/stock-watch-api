@@ -12,22 +12,8 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async createProduct(product: ProductDto) {
-    const productExists = await this.prisma.product.findFirst({
-      where: {
-        id: product.id,
-      },
-    });
-
-    if (productExists) {
-      throw new HttpException(
-        'This product already exists in database.',
-        HttpStatus.CONFLICT,
-      );
-    }
-
     const saveProduct = await this.prisma.product.create({
       data: {
-        id: product.id,
         name: product.name,
         price: product.price,
         quantity: product.quantity,
@@ -43,7 +29,10 @@ export class ProductService {
     });
 
     if (!productsExists) {
-      throw new HttpException('Does not have any product in database.', HttpStatus.NO_CONTENT);
+      throw new HttpException(
+        'Does not have any product in database.',
+        HttpStatus.NO_CONTENT,
+      );
     }
 
     return await this.prisma.product.findMany();
@@ -57,7 +46,54 @@ export class ProductService {
     });
 
     if (!productExists) {
-      throw new HttpException('This product does not exist.', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'This product does not exists.',
+        HttpStatus.CONFLICT,
+      );
     }
+  }
+
+  async updateProduct(id: string, product: ProductDto) {
+    const productExists = await this.prisma.product.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!productExists) {
+      throw new HttpException(
+        'This product does not exists.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return this.prisma.product.update({
+      where: {
+        id,
+      },
+      data: {
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity,
+      },
+    });
+  }
+
+  async deleteProduct(id: string) {
+    const productExists = await this.prisma.product.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!productExists) {
+      throw new HttpException('This product does not exists', HttpStatus.CONFLICT);
+    }
+
+    return await this.prisma.product.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
