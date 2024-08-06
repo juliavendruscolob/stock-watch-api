@@ -48,9 +48,15 @@ export class ProductService {
     if (!productExists) {
       throw new HttpException(
         'This product does not exists.',
-        HttpStatus.CONFLICT,
+        HttpStatus.NOT_FOUND,
       );
     }
+
+    return await this.prisma.product.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async updateProduct(id: string, product: ProductDto) {
@@ -63,7 +69,7 @@ export class ProductService {
     if (!productExists) {
       throw new HttpException(
         'This product does not exists.',
-        HttpStatus.CONFLICT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -87,7 +93,10 @@ export class ProductService {
     });
 
     if (!productExists) {
-      throw new HttpException('This product does not exists', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'This product does not exists',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return await this.prisma.product.delete({
