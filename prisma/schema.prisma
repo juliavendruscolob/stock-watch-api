@@ -4,10 +4,11 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postgresstockwatchapi@localhost:5432/stock-watch-db?schema=public"
+  url      = "postgresql://postgres:postgres@localhost:5433/stock-watch?schema=public"
 }
 
 model Product {
+  @@map("product")
   id        String         @id @default(uuid())
   name      String
   quantity  Int
@@ -18,6 +19,7 @@ model Product {
 }
 
 model StockHistory {
+  @@map("stock_history")
   id          String   @id @default(uuid())
   productId   String
   product     Product  @relation(fields: [productId], references: [id])
