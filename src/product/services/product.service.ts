@@ -1,11 +1,10 @@
 import {
-  ConflictException,
   HttpException,
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { ProductDto } from './dto/product.dto';
+import { ProductDto } from '../dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -51,6 +50,8 @@ export class ProductService {
         HttpStatus.CONFLICT,
       );
     }
+
+    return productExists;
   }
 
   async updateProduct(id: string, product: ProductDto) {
@@ -90,10 +91,14 @@ export class ProductService {
       throw new HttpException('This product does not exists', HttpStatus.CONFLICT);
     }
 
-    return await this.prisma.product.delete({
+    await this.prisma.product.delete({
       where: {
         id,
       },
     });
+
+    return { 
+      message: 'Produto deletado com sucesso.'
+     };
   }
 }

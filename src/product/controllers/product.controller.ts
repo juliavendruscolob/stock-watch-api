@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Post, Put, Param } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { ProductDto } from './dto/product.dto';
+import { ProductService } from '../services/product.service';
+import { ProductDto } from '../dto/product.dto';
 
 @Controller('product')
 export class ProductController {
@@ -31,7 +31,7 @@ export class ProductController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(200)
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
   }
