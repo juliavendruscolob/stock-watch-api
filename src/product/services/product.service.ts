@@ -5,10 +5,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { ProductDto } from '../dto/product.dto';
+import { StockHistoryService } from 'src/stock-history/services/stock-history.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly stockHistoryService: StockHistoryService,
+  ) {}
 
   async createProduct(product: ProductDto) {
     const saveProduct = await this.prisma.product.create({
@@ -68,7 +72,7 @@ export class ProductService {
       );
     }
 
-    return this.prisma.product.update({
+    const updatedProduct = await this.prisma.product.update({
       where: {
         id,
       },
@@ -78,6 +82,12 @@ export class ProductService {
         quantity: product.quantity,
       },
     });
+
+    if (product.quantity !== productExists.quantity) {
+      await this.stockHistoryService.registerMoviment(productExists, updatedProduct);
+    }
+
+    return updatedProduct;
   }
 
   async deleteProduct(id: string) {

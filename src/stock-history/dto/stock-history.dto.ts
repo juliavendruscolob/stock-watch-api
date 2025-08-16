@@ -6,8 +6,5 @@ export class StockHistoryDto {
     productId: string;
 
     @IsInt()
-    oldQuantity: number;
-
-    @IsInt()
     newQuantity: number;
 }

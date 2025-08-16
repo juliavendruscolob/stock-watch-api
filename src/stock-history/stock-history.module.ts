@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { StockHistoryController } from './controllers/stock-history.controller';
 import { StockHistoryService } from './services/stock-history.service';
+import { StockGateway } from 'src/stock/stock.gateway';
 
 @Module({
-  controllers: [StockHistoryController],
-  providers: [StockHistoryService, PrismaService],
+  providers: [StockHistoryService, PrismaService, StockGateway],
+  exports: [StockHistoryService],
 })
 export class StockHistoryModule {}
